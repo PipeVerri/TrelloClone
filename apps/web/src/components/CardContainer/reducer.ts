@@ -1,4 +1,5 @@
 import type { Update } from "../../utils/types";
+import {getApiLink} from "@/utils/apiHandler";
 
 export interface CardInfo {
 	title: string;
@@ -28,13 +29,17 @@ export interface BoardState {
 	containers: Container[];
 	containersOrder: number[];
 	userActions: UserActions;
+    boardId: string;
 }
 
 export type BoardAction =
 	| { type: "addCard"; containerId: number; cardInfo: CardInfo }
 	| ({ type: "updateCard"; cardId: number } & Update<CardInfo>)
 	| ({ type: "updateUserActions" } & Update<UserActions>)
-	| { type: "updateContainerCards"; containerId: number; newCards: number[] };
+	| ({ type: "updateContainerCards"; containerId: number; newCards: number[] })
+    | ({ type: "setBoard", data: {cards: CardInfo[], containers: Container[], containersOrder: number[] } })
+    | ({ type: "updateContainerName", containerId: number, newTitle: string })
+    | ({ type: "createContainer" })
 
 /**
  * Reducer dedicado a cambiar el boardState
@@ -58,29 +63,35 @@ export function boardReducer(state: BoardState, action: BoardAction) {
 	switch (action.type) {
 		case "addCard": {
 			const newCardId = state.cards.length;
-			return {
+			const newState = {
 				...state,
 				cards: [...state.cards, action.cardInfo],
 				containers: state.containers.map((c, i) =>
 					i === action.containerId ? { ...c, cards: [...c.cards, newCardId] } : c,
 				),
 			};
+            saveBoardState(newState);
+            return newState;
 		}
 		case "updateCard": {
-			return {
+			const newState = {
 				...state,
 				cards: state.cards.map((c, i) =>
 					i === action.cardId ? { ...state.cards[i], [action.param]: action.value } : c,
 				),
 			};
+            saveBoardState(newState);
+            return newState;
 		}
 		case "updateContainerCards": {
-			return {
+			const newState = {
 				...state,
 				containers: state.containers.map((c, i) =>
 					i === action.containerId ? { ...c, cards: action.newCards } : c,
 				),
 			};
+            saveBoardState(newState);
+            return newState;
 		}
 		case "updateUserActions": {
 			return {
@@ -91,5 +102,45 @@ export function boardReducer(state: BoardState, action: BoardAction) {
 				},
 			};
 		}
-	}
+        case "setBoard": {
+            return {
+                ...state,
+                ...action.data,
+            }
+        }
+        case "updateContainerName": {
+            const newState = {
+                ...state,
+                containers: state.containers.map((c, i) =>
+                    (i === action.containerId) ? {...c, title: action.newTitle } : c,
+                )
+            }
+            saveBoardState(newState)
+            return newState
+        }
+        case "createContainer": {
+            const newState = {
+                ...state,
+                containers: [...state.containers, {title: "New container", cards: []}],
+                containersOrder: [...state.containersOrder, state.containersOrder.length],
+            }
+            saveBoardState(newState)
+            return newState
+        }
+    }
+}
+
+async function saveBoardState(newState: BoardState) {
+    await fetch(`${getApiLink()}/boards/updateBoard`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+            id: newState.boardId,
+            data: {
+                cards: newState.cards,
+                containers: newState.containers,
+                containersOrder: newState.containersOrder,
+            }
+        }),
+    })
 }

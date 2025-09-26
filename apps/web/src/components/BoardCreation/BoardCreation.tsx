@@ -1,7 +1,7 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import {Setter} from "@/utils/types";
-import {ReactElement, useState} from "react";
+import {useState} from "react";
 import {getApiLink} from "@/utils/apiHandler";
 import {BoardData} from "@/components/BoardPreview/BoardPreview";
 

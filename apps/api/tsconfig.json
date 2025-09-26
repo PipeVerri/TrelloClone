@@ -1,8 +1,8 @@
 {
-  "extends": "@my/config/tsconfig.base.json",
-  "compilerOptions": {
-    "moduleResolution": "Bundler",
-    "allowImportingTsExtensions": true,
-    "module": "ESNext"
-  }
+	"extends": "@my/config/tsconfig.base.json",
+	"compilerOptions": {
+		"moduleResolution": "Bundler",
+		"allowImportingTsExtensions": true,
+		"module": "ESNext"
+	}
 }
