@@ -1,87 +1,49 @@
 "use client";
 
-import { useReducer } from "react";
-import Card from "../components/Card/Card";
-import CardContainer from "../components/CardContainer/CardContainer";
-import { type BoardState, boardReducer } from "../components/CardContainer/reducer";
-import MouseFollower from "../components/MouseFollower/MouseFollower";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
+import { BoardPreview, type BoardPreviewType } from "@/components/BoardPreview/BoardPreview";
+import BoardCreation from "@/components/BoardCreation/BoardCreation";
+import {getApiLink} from "@/utils/apiHandler";
 
 export default function Page() {
-	const [state, dispatch] = useReducer(boardReducer, {
-		cards: [{ title: "test1" }, { title: "test2" }, { title: "test3" }],
-		containers: [
-			{ title: "container0", cards: [0, 1] },
-			{ title: "container1", cards: [2] },
-		],
-		containersOrder: [0, 1],
-		userActions: {
-			dragging: null,
-			mouseHoveringContainer: null,
-			newIndex: null,
-			originalCardPlace: null,
-		},
-	});
+	const [boards, setBoards] = useState<BoardPreviewType[]>([]);
+    const [newBoardTitle, setNewBoardTitle] = useState("")
 
-	const handleRelease = (currentState: BoardState) => {
-		const { mouseHoveringContainer, newIndex, originalCardPlace, dragging } =
-			currentState.userActions;
-		if (mouseHoveringContainer != null && dragging != null) {
-			// Borrarla de su container original
-			const originalContainerCards =
-				currentState.containers[originalCardPlace.containerId].cards;
-			const newOriginalContainerCards = originalContainerCards.toSpliced(
-				originalCardPlace.index,
-				1,
-			);
-			// Meterla donde deberia ser
-			const destContainerCards = currentState.containers[mouseHoveringContainer].cards;
-			const newDestContainerCards = [
-				...destContainerCards.slice(0, newIndex),
-				dragging,
-				...destContainerCards.slice(newIndex),
-			];
-			// Actualizar el dispatch
-			dispatch({
-				type: "updateContainerCards",
-				containerId: originalCardPlace.containerId,
-				newCards: newOriginalContainerCards,
+	useEffect(() => {
+		const loadData = async () => {
+			const data = await fetch(`${getApiLink()}/boards/getAllBoards`, {
+				headers: { "Content-type": "application/json" },
 			});
-			dispatch({
-				type: "updateContainerCards",
-				containerId: mouseHoveringContainer,
-				newCards: newDestContainerCards,
-			});
+			const json = await data.json();
+			setBoards(json);
 		}
-		dispatch({ type: "updateUserActions", param: "dragging", value: null });
-		dispatch({ type: "updateUserActions", param: "originalCardPlace", value: null });
-		dispatch({ type: "updateUserActions", param: "newIndex", value: null });
-	};
+		loadData();
+	}, []);
+
+    const createBoard = async () => {
+        const response = await fetch(`${getApiLink()}/boards`, {
+            method: "POST",
+            headers: {"Content-type": "application/json" },
+            body: JSON.stringify({
+                title: newBoardTitle,
+            }),
+        })
+    }
 
 	return (
-		<div className="bg-gradient-to-br from-blue-800 to-teal-400 min-h-screen">
-			<div className="flex flex-row gap-6 p-4">
-				{state.containersOrder.map(
-					(containerId, _ /* TODO: no usar el index ya que el ordenamiento cambia */) => (
-						<CardContainer
-							id={containerId}
-							key={containerId}
-							state={state}
-							dispatch={dispatch}
-						/>
-					),
-				)}
-				<MouseFollower onRelease={() => handleRelease(state)}>
-					{state.userActions.dragging != null && (
-						<Card
-							id={state.userActions.dragging}
-							state={state}
-							dispatch={dispatch}
-							dragging={true}
-                            originalPlace={null}
-						/>
-					)}
-				</MouseFollower>
-			</div>
+		<div className="flex flex-row gap-8 p-8 flex-wrap">
+			{boards.map((board, idx) => (
+				<BoardPreview
+					id={board.id}
+					key={board.id}
+					title={board.title}
+					state={boards}
+					setter={setBoards}
+					index={idx}
+				/>
+			))}
+			<BoardCreation createFunc={createBoard} name={newBoardTitle} setter={setNewBoardTitle} />
 		</div>
 	);
 }

@@ -8,11 +8,11 @@ import { boardReducer } from "../src/components/CardContainer/reducer";
 
 describe("Card", () => {
 	test("correct rendering", () => {
-        render(
+		render(
 			<Card
 				id={0}
 				dragging={true}
-                // @ts-expect-error - no me importa pasarle el state entero
+				// @ts-expect-error - no me importa pasarle el state entero
 				state={{
 					cards: [{ title: "test" }],
 				}}
@@ -26,10 +26,10 @@ function TestBoard() {
 	const initialState = {
 		cards: [{ title: "test1" }, { title: "test2" }, { title: "test3" }],
 		containers: [
-            {title: "container0", cards: [0, 1, 2]},
-            {title: "container1", cards: []},
-        ],
-        containersOrder: [0, 1],
+			{ title: "container0", cards: [0, 1, 2] },
+			{ title: "container1", cards: [] },
+		],
+		containersOrder: [0, 1],
 		userActions: {
 			dragging: null,
 			newIndex: null,

@@ -3,4 +3,6 @@
 /* biome-ignore lint: theme es la variable de configuracion de tailwind */
 @theme {
 	--spacing-card: 300px;
+	--spacing-preview-h: 240px;
+	--spacing-preview-w: 300px;
 }

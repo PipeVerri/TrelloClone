@@ -1,8 +1,9 @@
 {
 	"extends": "@my/config/tsconfig.base.json",
 	"compilerOptions": {
+		"baseUrl": ".",
 		"paths": {
-			"@/*": ["./src/"]
+			"@/*": ["src/*"]
 		},
 		"allowJs": true,
 		"noEmit": true,
@@ -15,9 +16,9 @@
 				"name": "next"
 			}
 		],
-        "jsx": "preserve",
-        "module": "ESNext",
-        "lib": ["ES2023", "DOM"]
+		"jsx": "preserve",
+		"module": "ESNext",
+		"lib": ["ES2023", "DOM"]
 	},
 	"include": [".", ".next/types/**/*.ts"],
 	"exclude": ["node_modules"]
