@@ -4,11 +4,14 @@ import { getApiLink } from "@/utils/apiHandler";
 import { generateGradient } from "@/utils/gradients";
 import type { Setter } from "@/utils/types";
 
-export interface BoardPreviewType {
-	id: string;
-	title: string;
-	state: BoardPreviewType[];
-	setter: Setter<BoardPreviewType[]>;
+export interface BoardData {
+    id: string,
+    title: string
+}
+
+type BoardPreviewType = BoardData & {
+	state: BoardData[];
+	setter: Setter<BoardData[]>;
 	index: number;
 }
 

@@ -4,13 +4,14 @@ import * as dotenv from "dotenv"
 import {errorHandler} from "./middleware/errorHandler";
 import {pinoHttp} from "pino-http";
 import cors from "cors"
+import {customLoggerLevel} from "./utils/logging.ts";
 dotenv.config()
 
 export function createServer() {
     const app = express()
     // Middleware
     app.use(express.json())
-    app.use(pinoHttp())
+    app.use(pinoHttp({customLogLevel: customLoggerLevel}))
     app.use(cors({
         origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
         credentials: true // Permitir que se envien credenciales(auth, por ejemplo)
