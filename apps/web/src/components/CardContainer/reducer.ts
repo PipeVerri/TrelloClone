@@ -42,6 +42,7 @@ export type BoardAction =
     | ({ type: "setBoard", data: {cards: CardInfo[], containers: Container[], containersOrder: number[] } })
     | ({ type: "updateContainerName", containerId: number, newTitle: string })
     | ({ type: "createContainer" })
+    | ({ type: "deleteContainer", containerId: number })
 
 /**
  * Reducer dedicado a cambiar el boardState
@@ -128,6 +129,21 @@ export function boardReducer(state: BoardState, action: BoardAction) {
             }
             saveBoardState(newState)
             return newState
+        }
+        case "deleteContainer": {
+            // Remove container and its cards references; cards array kept (could be pruned in backend if needed)
+            const newContainers = state.containers.toSpliced(action.containerId, 1);
+            // Remove from order and also remap order indices since containers are index-based
+            const newOrder = state.containersOrder
+                .filter((cid) => cid !== action.containerId)
+                .map((cid) => (cid > action.containerId ? cid - 1 : cid));
+            const newState = {
+                ...state,
+                containers: newContainers,
+                containersOrder: newOrder,
+            };
+            saveBoardState(newState);
+            return newState;
         }
     }
 }

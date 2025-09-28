@@ -1,4 +1,4 @@
-import { faSquarePlus } from "@fortawesome/free-solid-svg-icons";
+import { faSquarePlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { type Dispatch, useEffect, useRef, useState } from "react";
 import Card from "../Card/Card";
@@ -90,13 +90,26 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
             onMouseLeave={handleMouseLeave}
             data-testid={`container${id}`}
         >
-            <input
-                type={"text"}
-                value={state.containers[id].title}
-                onChange={(e) => dispatch({type: "updateContainerName", containerId: id, newTitle: e.target.value})}
-                className={"bg-white/70 p-1 rounded-md px-2"}
-                placeholder={"Container title"}
-            />
+            <div className="flex items-center gap-2">
+                <input
+                    type={"text"}
+                    value={state.containers[id].title}
+                    onChange={(e) => dispatch({type: "updateContainerName", containerId: id, newTitle: e.target.value})}
+                    className={"bg-white/70 p-1 rounded-md px-2 flex-1"}
+                    placeholder={"Container title"}
+                />
+                <button
+                    className="w-8 h-8 flex items-center justify-center rounded-md bg-red-500 hover:bg-red-600 active:bg-red-700"
+                    aria-label="Delete container"
+                    onClick={() => {
+                        const conf = confirm("Do you want to delete this container and all its cards?");
+                        if (conf) dispatch({ type: "deleteContainer", containerId: id });
+                    }}
+                    type="button"
+                >
+                    <FontAwesomeIcon icon={faTrash} className="text-white" />
+                </button>
+            </div>
             {displayCards.map((cardId, i) => {
                 const ghostHere = shouldShowGhost && ghostIndex === i;
 
