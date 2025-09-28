@@ -1,4 +1,4 @@
-import type { Update } from "../../utils/types";
+import type { Update } from "@/utils/types";
 import {getApiLink} from "@/utils/apiHandler";
 
 export interface CardInfo {

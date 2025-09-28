@@ -88,7 +88,7 @@ export default function EditBoard() {
             {/* Container takes full height, scrolls horizontally */}
             <div className="flex flex-row gap-6 p-4 h-full min-w-fit">
                 {state.containersOrder.map(
-                    (containerId, _ /* TODO: no usar el index ya que el ordenamiento cambia */) => (
+                    (containerId, _) => (
                         <CardContainer
                             id={containerId}
                             key={containerId}
