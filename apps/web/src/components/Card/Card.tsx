@@ -32,17 +32,10 @@ type CardProps = BaseCardProps &
  * @param originalPlace - Origin container and index where the card was before dragging
  * @param innerRef - If provided, used as a ref to the card's div (for measurements)
  */
-export default function Card({
-	id,
-	state,
-	dispatch,
-	dragging = false,
-	originalPlace,
-	innerRef = (_el) => {},
-}: CardProps) {
+export default function Card({ id, state, dispatch, dragging = false, originalPlace, innerRef = (_el) => {} }: CardProps) {
 	const placeholder = "Titulo...";
 
- const handlePress = (e: React.MouseEvent<HTMLDivElement>) => {
+	const handlePress = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (!dragging) {
 			const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
 			const offset = { x: e.clientX - rect.left, y: e.clientY - rect.top };
@@ -80,9 +73,9 @@ export default function Card({
 						value: e.target.value,
 					})
 				}
- 			onMouseDown={(e) => {
- 				e.stopPropagation();
- 			}} // Stop propagation so the parent doesn't start dragging when editing text
+				onMouseDown={(e) => {
+					e.stopPropagation();
+				}} // Stop propagation so the parent doesn't start dragging when editing text
 				placeholder={placeholder}
 				className={"overflow-hidden text-ellipsis block w-full"}
 				size={Math.max(placeholder.length, data.title.length)}
@@ -90,11 +83,7 @@ export default function Card({
 			<button className={"bg-green-500 p-2 rounded-lg"} type={"button"}>
 				<FontAwesomeIcon icon={faPen} color="white" />
 			</button>
-			<button
-				className={"bg-green-500 p-2 rounded-lg"}
-				data-testid={"drag-button"}
-				type={"button"}
-			>
+			<button className={"bg-green-500 p-2 rounded-lg"} data-testid={"drag-button"} type={"button"}>
 				<FontAwesomeIcon icon={faBars} color="white" />
 			</button>
 		</div>

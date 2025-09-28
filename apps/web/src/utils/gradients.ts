@@ -38,6 +38,7 @@ export function generateGradient(opts: GradientOptions = {}): string {
 			return (4294967296 * (2097151 & h2) + (h1 >>> 0)) >>> 0;
 		};
 		const mulberry32 = (a: number) => () => {
+			// biome-ignore lint/suspicious/noAssignInExpressions: Doesn't have to be clean code
 			let t = (a += 0x6d2b79f5);
 			t = Math.imul(t ^ (t >>> 15), t | 1);
 			t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
@@ -119,7 +120,5 @@ export function generateGradient(opts: GradientOptions = {}): string {
 	const stopC = `hsl(${h2} ${s2}% ${l2}%)`;
 
 	// 3-stop gradients add depth and reduce muddy blends
-	return threeStops
-		? `linear-gradient(${ang}deg, ${stopA}, ${stopB}, ${stopC})`
-		: `linear-gradient(${ang}deg, ${stopA}, ${stopC})`;
+	return threeStops ? `linear-gradient(${ang}deg, ${stopA}, ${stopB}, ${stopC})` : `linear-gradient(${ang}deg, ${stopA}, ${stopC})`;
 }
