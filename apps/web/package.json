@@ -10,8 +10,7 @@
 		"lint:fix": "biome lint --fix .",
 		"check": "biome check .",
 		"check:fix": "biome check --fix .",
-		"test:unit": "jest",
-		"test:e2e": "playwright test"
+		"test": "playwright test"
 	},
 	"keywords": [],
 	"author": "",
