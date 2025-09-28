@@ -10,9 +10,9 @@ export default defineConfig({
 		video: "off", // record a video
 		screenshot: "only-on-failure",
 	},
-    webServer: {
-        command: "pnpm dev",
-        url: "http://localhost:3000",
-        reuseExistingServer: !process.env.CI,
-    }
+	webServer: {
+		command: "pnpm dev",
+		url: "http://localhost:3000",
+		reuseExistingServer: !process.env.CI,
+	},
 });

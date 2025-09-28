@@ -2,11 +2,11 @@
 import { z } from "zod";
 
 export const BoardCardSchema = z.object({
-    title: z.string().min(1).trim(),
+    title: z.string(),
 });
 
 export const BoardContainerSchema = z.object({
-    title: z.string().min(1).trim(),
+    title: z.string(),
     // indices of cards that belong to this container
     cards: z.array(z.number().int().gte(0)),
 });

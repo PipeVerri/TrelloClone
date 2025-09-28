@@ -90,6 +90,12 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
 			onMouseLeave={handleMouseLeave}
 			data-testid={`container${id}`}
 		>
+            <input
+                type={"text"}
+                value={state.containers[id].title}
+                onChange={(e) => dispatch({type: "updateContainerName", containerId: id, newTitle: e.target.value})}
+                className={"bg-white/70 p-1 rounded-md px-2"}
+            />
 			{displayCards.map((cardId, i) => {
 				const ghostHere = shouldShowGhost && ghostIndex === i;
 

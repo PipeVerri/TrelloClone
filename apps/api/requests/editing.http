@@ -24,7 +24,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "id": "cmfe51lea0000gdw5qgbs7wb8",
+  "id": "cmg0y2x2f0001gdihaj2v280v",
   "data": {
     "cards": [
       {
@@ -44,7 +44,7 @@ Accept: application/json
 }
 
 ### Test de GET a un board
-GET {{baseUrl}}/boards/getBoard?id=cmfe51lea0000gdw5qgbs7wb8
+GET {{baseUrl}}/boards/getBoard?id=cmg0y2x2f0001gdihaj2v280v
 
 ### Borrar un board
 DELETE {{baseUrl}}/boards/deleteBoard
