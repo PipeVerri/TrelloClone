@@ -101,6 +101,7 @@ export default function EditBoard() {
 					className="w-card h-16 bg-white rounded-lg flex-shrink-0 flex items-center justify-center"
 					onClick={() => dispatch({ type: "createContainer" })}
 					type={"button"}
+                    data-testid={"createContainer"}
 				>
 					<FontAwesomeIcon icon={faPlus} />
 				</button>
@@ -128,6 +129,7 @@ export default function EditBoard() {
 							})
 						}
 						type={"button"}
+                        data-testid={"deleteSlot"}
 					>
 						<div
 							className={

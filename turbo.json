@@ -3,7 +3,8 @@
   "tasks": {
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["//#container:up"]
     },
     "lint:fix": {
       "outputs": []
@@ -22,12 +23,18 @@
       "outputs": [".next/**", "dist/**"]
     },
     "test:unit": {
-      "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
     "test:e2e": {
-      "dependsOn": ["^build"],
       "outputs": ["test-results/**"]
+    },
+    "//#container:up": {
+      "cache": false,
+      "outputs": []
+    },
+    "//#container:down": {
+      "cache": false,
+      "outputs": []
     }
   }
 }

@@ -12,7 +12,9 @@
     "check": "turbo run check",
     "check:fix": "turbo run check:fix",
     "test:unit": "turbo run test:unit",
-    "test:e2e": "turbo run test:e2e"
+    "test:e2e": "turbo run test:e2e",
+    "container:up": "docker compose up -d",
+    "container:down": "docker compose down"
   },
   "keywords": [],
   "author": "",

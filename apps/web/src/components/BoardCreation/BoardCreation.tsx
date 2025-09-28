@@ -51,6 +51,7 @@ export default function BoardCreation({ setBoards }: Props) {
 							createBoard();
 						}
 					}}
+                    placeholder={"New board name..."}
 				/>
 				<button
 					className="ml-3 flex-none h-10 w-10 flex items-center justify-center bg-blue-500 rounded-xl"
