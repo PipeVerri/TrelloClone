@@ -20,6 +20,7 @@ export default function EditBoard() {
         containersOrder: [],
         userActions: {
             dragging: null,
+            mouseOffset: null,
             mouseHoveringContainer: null,
             newIndex: null,
             originalCardPlace: null,
@@ -39,16 +40,14 @@ export default function EditBoard() {
     }, []);
 
     const handleRelease = (currentState: BoardState) => {
-        const { mouseHoveringContainer, newIndex, originalCardPlace, dragging } =
-            currentState.userActions;
+        const { mouseHoveringContainer, newIndex, originalCardPlace, dragging } = currentState.userActions;
         if (
             mouseHoveringContainer != null &&
             dragging != null &&
             mouseHoveringContainer != originalCardPlace?.containerId
         ) {
             // Borrarla de su container original
-            const originalContainerCards =
-                currentState.containers[originalCardPlace.containerId].cards;
+            const originalContainerCards = currentState.containers[originalCardPlace.containerId].cards;
             const newOriginalContainerCards = originalContainerCards.toSpliced(
                 originalCardPlace.index,
                 1,
@@ -75,6 +74,7 @@ export default function EditBoard() {
         dispatch({ type: "updateUserActions", param: "dragging", value: null });
         dispatch({ type: "updateUserActions", param: "originalCardPlace", value: null });
         dispatch({ type: "updateUserActions", param: "newIndex", value: null });
+        dispatch({ type: "updateUserActions", param: "mouseOffset", value: null });
     };
 
     if (loading) return (
@@ -104,7 +104,7 @@ export default function EditBoard() {
                 >
                     <FontAwesomeIcon icon={faPlus} />
                 </button>
-                <MouseFollower onRelease={() => handleRelease(state)}>
+                <MouseFollower onRelease={() => handleRelease(state)} offset={state.userActions.mouseOffset ?? { x: 0, y: 0 }}>
                     {state.userActions.dragging != null && (
                         <Card
                             id={state.userActions.dragging}

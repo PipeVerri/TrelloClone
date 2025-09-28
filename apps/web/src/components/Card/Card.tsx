@@ -1,5 +1,6 @@
 import { faBars, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type React from "react";
 import type { Dispatch } from "react";
 import type { BoardAction, BoardState, OriginalCardPlace } from "../CardContainer/reducer";
 
@@ -42,8 +43,11 @@ export default function Card({
 }: CardProps) {
 	const placeholder = "Titulo...";
 
-	const handlePress = () => {
+ const handlePress = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (!dragging) {
+			const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+			const offset = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+			dispatch({ type: "updateUserActions", param: "mouseOffset", value: offset });
 			dispatch({ type: "updateUserActions", param: "dragging", value: id });
 			dispatch({
 				type: "updateUserActions",

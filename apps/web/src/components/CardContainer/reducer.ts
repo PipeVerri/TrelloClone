@@ -12,6 +12,7 @@ export interface OriginalCardPlace {
 
 interface BaseUserActions {
 	dragging: number | null;
+	mouseOffset: { x: number; y: number } | null;
 }
 type UserActions = BaseUserActions &
 	(
