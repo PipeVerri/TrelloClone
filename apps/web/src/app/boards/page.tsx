@@ -14,14 +14,13 @@ export default function Page() {
 				headers: { "Content-type": "application/json" },
 			});
 			const json = await data.json();
-            console.log(json)
 			setBoards(json);
 		}
 		loadData();
 	}, []);
 
 	return (
-		<div className="flex flex-row gap-8 p-8 flex-wrap">
+		<div className="flex flex-row gap-8 p-8 flex-wrap max-w-full">
 			{boards.map((board, idx) => (
 				<BoardPreview
 					id={board.id}
