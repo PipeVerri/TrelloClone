@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* biome-ignore lint: theme es la variable de configuracion de tailwind */
+/* biome-ignore lint: "theme" is the Tailwind config variable in this file */
 @theme {
 	--spacing-card: 300px;
 	--spacing-preview-h: 240px;

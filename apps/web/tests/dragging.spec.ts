@@ -51,16 +51,9 @@ test.describe("dragging", () => {
 		const targetBox = await destSlot.boundingBox();
 		if (!sourceBox || !targetBox) throw new Error("Could not compute drag boxes");
 
-		await page.mouse.move(
-			sourceBox.x + sourceBox.width / 2,
-			sourceBox.y + sourceBox.height / 2,
-		);
+		await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + sourceBox.height / 2);
 		await page.mouse.down();
-		await page.mouse.move(
-			targetBox.x + targetBox.width / 2,
-			targetBox.y + targetBox.height / 2,
-			{ steps: 20 },
-		);
+		await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + targetBox.height / 2, { steps: 20 });
 		await page.mouse.up();
 
 		// (Optional) Pause to step through in the Inspector
