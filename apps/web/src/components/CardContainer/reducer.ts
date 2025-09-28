@@ -148,7 +148,10 @@ export function boardReducer(state: BoardState, action: BoardAction) {
 }
 
 async function saveBoardState(newState: BoardState) {
-	await fetch(`${getApiLink()}/boards/updateBoard`, {
+    // Do nothing when doing unit tests
+    if (typeof fetch === "undefined") return;
+
+    await fetch(`${getApiLink()}/boards/updateBoard`, {
 		method: "PUT",
 		headers: { "Content-type": "application/json" },
 		body: JSON.stringify({

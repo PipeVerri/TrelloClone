@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
-import { render, screen, waitFor } from "@testing-library/react";
+import {render, screen, waitFor, within} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useReducer } from "react";
-import Card from "../src/components/Card/Card";
-import CardContainer from "../src/components/CardContainer/CardContainer";
-import { boardReducer } from "../src/components/CardContainer/reducer";
+import Card from "@/components/Card/Card";
+import CardContainer from "@/components/CardContainer/CardContainer";
+import {boardReducer, BoardState} from "@/components/CardContainer/reducer";
 
 describe("Card", () => {
 	test("correct rendering", () => {
@@ -13,9 +13,7 @@ describe("Card", () => {
 				id={0}
 				dragging={true}
 				// @ts-expect-error - no me importa pasarle el state entero
-				state={{
-					cards: [{ title: "test" }],
-				}}
+				state={{ cards: [{ title: "test" }], userActions: {mouseHoveringTrash: false}}}
 			/>,
 		);
 		expect(screen.getByDisplayValue("test")).toBeInTheDocument();
@@ -23,7 +21,7 @@ describe("Card", () => {
 });
 
 function TestBoard() {
-	const initialState = {
+	const initialState: BoardState = {
 		cards: [{ title: "test1" }, { title: "test2" }, { title: "test3" }],
 		containers: [
 			{ title: "container0", cards: [0, 1, 2] },
@@ -35,18 +33,17 @@ function TestBoard() {
 			newIndex: null,
 			mouseHoveringContainer: null,
 			originalCardPlace: null,
+            mouseHoveringTrash: false,
+            mouseOffset: null
 		},
+        boardId: "TestBoard"
 	};
 
 	const [state, dispatch] = useReducer(boardReducer, initialState);
 	return (
 		<>
-			<div data-testid="container0">
-				<CardContainer id={0} state={state} dispatch={dispatch} />
-			</div>
-			<div data-testid="container1">
-				<CardContainer id={1} state={state} dispatch={dispatch} />
-			</div>
+            <CardContainer id={0} state={state} dispatch={dispatch} />
+            <CardContainer id={1} state={state} dispatch={dispatch} />
 		</>
 	);
 }
@@ -70,4 +67,11 @@ describe("Container", () => {
 			expect(screen.getByDisplayValue("")).toBeInTheDocument();
 		});
 	});
+
+    test("container renaming", () => {
+        render(<TestBoard />)
+
+        const container = screen.getByTestId("container0")
+        expect(within(container).getAllByRole("textbox")).toHaveLength(4); // 3 cards + container input
+    })
 });
