@@ -12,13 +12,18 @@ interface CardContainerProps {
 }
 
 /**
- * Un contenedor de {@link Card | cards}
- * @param id - El id del contenedor
- * @param state - El BoardState
- * @param dispatch - El dispatch para BoardState
+ * A vertical container of draggable {@link Card | cards}.
+ *
+ * Handles mouse enter/leave to know when the pointer is over this container,
+ * computes the insertion index while dragging (to render a ghost placeholder),
+ * and exposes an input to rename the container and a button to delete it.
+ *
+ * @param id - The container identifier (index in state.containers)
+ * @param state - The full board state
+ * @param dispatch - Reducer dispatch to mutate the board state
  */
 export default function CardContainer({ id, state, dispatch }: CardContainerProps) {
-    // Refs por cardId
+    // Per-card DOM refs, used to compute midpoints while dragging
     const cardsRef = useRef<Record<number, HTMLDivElement | null>>({});
     const [mouseHovering, setMouseHovering] = useState(false);
     const [ghostIndex, setGhostIndex] = useState<number | null>(null);
@@ -34,14 +39,14 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
         setGhostIndex(null);
     };
 
-    // Calcula la posición de inserción contra la lista SIN la tarjeta arrastrada
+    // Compute the insertion position against the list WITHOUT the dragged card
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             const draggingId = state.userActions.dragging;
             if (!mouseHovering || draggingId == null) return;
 
             const cards = state.containers[id].cards;
-            const displayCards = cards.filter((c) => c !== draggingId); // base de cálculo y render
+            const displayCards = cards.filter((c) => c !== draggingId); // Calculation/render base
             let newIndex = 0;
 
             for (let i = 0; i < displayCards.length; i++) {
@@ -52,11 +57,11 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
                 const rect = el.getBoundingClientRect();
                 const midY = rect.top + rect.height / 2;
 
-                // Si el mouse está por debajo de la mitad de esta carta, insertar después
+                // If the mouse is below the middle of this card, insert AFTER it
                 if (e.clientY > midY) {
                     newIndex = i + 1;
                 } else {
-                    // Por encima de la mitad ⇒ insertar antes de esta carta
+                    // Above the middle ⇒ insert BEFORE this card
                     break;
                 }
             }
@@ -77,13 +82,13 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
     const cards = state.containers[id].cards;
     const draggingId = state.userActions.dragging;
 
-    // Lista "visible" que usamos tanto para calcular como para renderizar
+    // "Visible" list used both to compute positions and to render
     const displayCards = draggingId == null ? cards : cards.filter((c) => c !== draggingId);
 
     const shouldShowGhost = draggingId != null && state.userActions.mouseHoveringContainer === id;
 
     return (
-        // Changed: Added h-fit and self-start to prevent full height expansion
+        // Layout: limit height and prevent the column from stretching to full container height
         <div
             className="flex flex-col bg-amber-200 min-w-[300px] h-fit self-start gap-2 p-4 rounded-lg drop-shadow-lg"
             onMouseEnter={handleMouseEnter}
@@ -123,7 +128,7 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
                             innerRef={(el: HTMLDivElement | null) => {
                                 cardsRef.current[cardId] = el;
                             }}
-                            // index aquí es el índice "visible" (sin la arrastrada)
+                            // Index here is the "visible" index (without the dragged card)
                             originalPlace={{ containerId: id, index: i }}
                             key={cardId}
                         />

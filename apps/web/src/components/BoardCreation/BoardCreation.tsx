@@ -6,9 +6,13 @@ import {getApiLink} from "@/utils/apiHandler";
 import {BoardData} from "@/components/BoardPreview/BoardPreview";
 
 interface Props {
+    /** Setter for the array of boards displayed on the listing page */
     setBoards: Setter<BoardData[]>
 }
 
+/**
+ * Small form to create a new board by title. Posts to the API and updates local state on success.
+ */
 export default function BoardCreation({setBoards}: Props) {
     const [newBoardTitle, setNewBoardTitle] = useState("")
 

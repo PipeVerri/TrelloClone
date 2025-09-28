@@ -5,6 +5,9 @@ import {BoardData, BoardPreview} from "@/components/BoardPreview/BoardPreview";
 import BoardCreation from "@/components/BoardCreation/BoardCreation";
 import {getApiLink} from "@/utils/apiHandler";
 
+/**
+ * Boards listing page: fetches all boards and renders previews and the new-board control.
+ */
 export default function Page() {
 	const [boards, setBoards] = useState<BoardData[]>([]);
 

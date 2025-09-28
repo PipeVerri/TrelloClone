@@ -18,7 +18,7 @@ type BoardPreviewType = BoardData & {
 
 export function BoardPreview({ id, title, state, setter, index }: BoardPreviewType) {
 	const deleteBoard = async () => {
-		const conf = confirm("¿Queres borrar este board?");
+		const conf = confirm("Do you want to delete this board?");
 		if (conf) {
 			const url = `${getApiLink()}/boards/deleteBoard`;
 			setter((oldState) => {

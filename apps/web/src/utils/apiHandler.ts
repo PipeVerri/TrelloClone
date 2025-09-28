@@ -1,4 +1,9 @@
+/**
+ * Base URL of the API the web app should talk to.
+ *
+ * It reads NEXT_PUBLIC_API_URL from the environment. In the future this could
+ * be extended to return a different URL for development or test.
+ */
 export function getApiLink() {
-	// Quizas en el futuro agrege un if que retorne algo diferente si estoy en dev o no
 	return process.env.NEXT_PUBLIC_API_URL;
 }

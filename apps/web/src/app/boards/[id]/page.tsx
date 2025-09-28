@@ -10,6 +10,9 @@ import {useParams} from "next/navigation";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * Board editor page: manages drag-and-drop of cards across containers and persists changes.
+ */
 export default function EditBoard() {
     const boardId = useParams()?.id as string
     if (!boardId) return <div>Missing board id</div>;
@@ -97,7 +100,7 @@ export default function EditBoard() {
 
     return (
         <div className="bg-gradient-to-br from-blue-800 to-teal-400 h-screen overflow-x-auto">
-            {/* Container takes full height, scrolls horizontally */}
+            {/* Columns take full height; horizontal scrolling for overflow */}
             <div className="flex flex-row gap-6 p-4 h-full min-w-fit">
                 {state.containersOrder.map(
                     (containerId, _) => (

@@ -45,22 +45,26 @@ export type BoardAction =
     | ({ type: "deleteContainer", containerId: number })
 
 /**
- * Reducer dedicado a cambiar el boardState
- * @param state - Pasado por react al usar useReducer
- * @param action - Lo que se quiere cambiar en el estado
- * @returns El nuevo boardState
+ * Reducer in charge of mutating the board state.
+ * @param state - Current state provided by React useReducer
+ * @param action - Requested change to apply to the state
+ * @returns The new board state
  *
  * @remarks
- * Las acciones y sus argumentos son:
- * - "addCard": Agrega una nueva tarjeta, sus argumentos son:
- *      - "containerId": El ID del container a agregarla
- *      - "cardInfo": La tarjeta por defecto a agregar
- * - "updateCard": Edita una tarjeta, sus argumentos son:
- *      - "cardId": El ID de la carta a editar
- *      - "param": El parametro a editar
- *      - "value": El nuevo valor a setear
- * - "updateUserActions": Sus argumentos son iguales que updateCard pero sin el cardId
- * - "updateContainerCards": Su unico argumento es "newContainerCards", el objeto entero reemplazado
+ * Supported actions and their arguments:
+ * - "addCard": Add a new card
+ *      - containerId: Destination container index
+ *      - cardInfo: Default card data
+ * - "updateCard": Edit a card field
+ *      - cardId: Card index
+ *      - param: Field to update
+ *      - value: New value for the field
+ * - "updateUserActions": Same shape as updateCard but applies to userActions (no cardId)
+ * - "updateContainerCards": Replace the cards array for a given container (newCards)
+ * - "setBoard": Replace cards, containers and containersOrder from persisted data
+ * - "updateContainerName": Rename a container
+ * - "createContainer": Create a new empty container and append it to containersOrder
+ * - "deleteContainer": Remove a container and update containersOrder accordingly
  */
 export function boardReducer(state: BoardState, action: BoardAction) {
 	switch (action.type) {
@@ -131,9 +135,9 @@ export function boardReducer(state: BoardState, action: BoardAction) {
             return newState
         }
         case "deleteContainer": {
-            // Remove container and its cards references; cards array kept (could be pruned in backend if needed)
+            // Remove container and its card references; card data array is kept (server may prune later)
             const newContainers = state.containers.toSpliced(action.containerId, 1);
-            // Remove from order and also remap order indices since containers are index-based
+            // Remove from order and remap indices since container ids are array indices
             const newOrder = state.containersOrder
                 .filter((cid) => cid !== action.containerId)
                 .map((cid) => (cid > action.containerId ? cid - 1 : cid));
