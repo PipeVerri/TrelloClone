@@ -61,7 +61,10 @@ export default function Card({
 	return (
 		// biome-ignore lint/a11y/useSemanticElements: La tarjeta tiene botones de hijos y quiero que sea toda interactiva
 		<div
-			className="bg-white rounded-md shadow-md p-2 border-0 py-3 w-card flex flex-row gap-1"
+			className={
+				"bg-white rounded-md shadow-md p-2 border-0 py-3 w-card flex flex-row gap-1 " +
+				(dragging && state.userActions.mouseHoveringTrash ? "opacity-50" : "")
+			}
 			onMouseDown={handlePress}
 			ref={innerRef}
 			role={"button"}

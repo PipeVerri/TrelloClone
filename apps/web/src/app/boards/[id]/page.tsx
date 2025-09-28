@@ -8,7 +8,7 @@ import MouseFollower from "@/components/MouseFollower/MouseFollower";
 import {getApiLink} from "@/utils/apiHandler";
 import {useParams} from "next/navigation";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 export default function EditBoard() {
     const boardId = useParams()?.id as string
@@ -24,6 +24,7 @@ export default function EditBoard() {
             mouseHoveringContainer: null,
             newIndex: null,
             originalCardPlace: null,
+            mouseHoveringTrash: false,
         },
         boardId: boardId
     });
@@ -40,29 +41,37 @@ export default function EditBoard() {
     }, []);
 
     const handleRelease = (currentState: BoardState) => {
-        const { mouseHoveringContainer, newIndex, originalCardPlace, dragging } = currentState.userActions;
-        if (
+        const { mouseHoveringContainer, newIndex, originalCardPlace, dragging, mouseHoveringTrash } = currentState.userActions;
+
+        if (dragging != null && originalCardPlace != null && mouseHoveringTrash) {
+            // Delete: remove from its original container
+            const originalContainerCards = currentState.containers[originalCardPlace.containerId].cards;
+            const newOriginalContainerCards = originalContainerCards.toSpliced(originalCardPlace.index, 1);
+            dispatch({
+                type: "updateContainerCards",
+                containerId: originalCardPlace.containerId,
+                newCards: newOriginalContainerCards,
+            });
+        } else if (
             mouseHoveringContainer != null &&
             dragging != null &&
             mouseHoveringContainer != originalCardPlace?.containerId
         ) {
-            // Borrarla de su container original
-            const originalContainerCards = currentState.containers[originalCardPlace.containerId].cards;
+            // Move between containers
+            const originalContainerCards = currentState.containers[originalCardPlace!.containerId].cards;
             const newOriginalContainerCards = originalContainerCards.toSpliced(
-                originalCardPlace.index,
+                originalCardPlace!.index,
                 1,
             );
-            // Meterla donde deberia ser
             const destContainerCards = currentState.containers[mouseHoveringContainer].cards;
             const newDestContainerCards = [
-                ...destContainerCards.slice(0, newIndex),
+                ...destContainerCards.slice(0, newIndex!),
                 dragging,
-                ...destContainerCards.slice(newIndex),
+                ...destContainerCards.slice(newIndex!),
             ];
-            // Actualizar el dispatch
             dispatch({
                 type: "updateContainerCards",
-                containerId: originalCardPlace.containerId,
+                containerId: originalCardPlace!.containerId,
                 newCards: newOriginalContainerCards,
             });
             dispatch({
@@ -71,10 +80,13 @@ export default function EditBoard() {
                 newCards: newDestContainerCards,
             });
         }
+
+        // Reset user action flags
         dispatch({ type: "updateUserActions", param: "dragging", value: null });
         dispatch({ type: "updateUserActions", param: "originalCardPlace", value: null });
         dispatch({ type: "updateUserActions", param: "newIndex", value: null });
         dispatch({ type: "updateUserActions", param: "mouseOffset", value: null });
+        dispatch({ type: "updateUserActions", param: "mouseHoveringTrash", value: false });
     };
 
     if (loading) return (
@@ -115,6 +127,23 @@ export default function EditBoard() {
                         />
                     )}
                 </MouseFollower>
+
+                {state.userActions.dragging != null && (
+                    <div
+                        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+                        onMouseEnter={() => dispatch({ type: "updateUserActions", param: "mouseHoveringTrash", value: true })}
+                        onMouseLeave={() => dispatch({ type: "updateUserActions", param: "mouseHoveringTrash", value: false })}
+                    >
+                        <div
+                            className={
+                                `rounded-full w-80 h-14 flex items-center justify-center transition-all duration-150 ` +
+                                (state.userActions.mouseHoveringTrash ? "bg-red-600 scale-110" : "bg-red-500 hover:bg-red-600")
+                            }
+                        >
+                            <FontAwesomeIcon icon={faTrash} className="text-white text-3xl" />
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
