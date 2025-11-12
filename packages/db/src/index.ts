@@ -5,6 +5,9 @@ export const prisma = new PrismaClient({
 })
 export {Prisma} from "./generated/prisma/client"
 
+/**
+ * Disconnects from the database.
+ */
 export async function disconnect(): Promise<void> {
     await prisma.$disconnect()
 }
