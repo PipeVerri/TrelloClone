@@ -74,6 +74,9 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
 		return () => window.removeEventListener("mousemove", handleMouseMove);
 	}, [mouseHovering, state.userActions.dragging, state.containers, id, dispatch]);
 
+	/**
+	 * Creates a new card in this container.
+	 */
 	function createCard() {
 		const defaultCard: CardInfo = { title: "" };
 		dispatch({ type: "addCard", containerId: id, cardInfo: defaultCard });

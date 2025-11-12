@@ -2,6 +2,12 @@ import type { RequestHandler } from "express";
 import type { ZodTypeAny } from "zod";
 import { z } from "zod";
 
+/**
+ * Middleware to validate request data using Zod schema.
+ * @param schema - The Zod schema to validate against.
+ * @param where - The part of the request to validate ('body', 'query', or 'params').
+ * @returns Express request handler.
+ */
 export function validate<T extends ZodTypeAny>(
 	schema: T,
 	where: "body" | "query" | "params" = "body",

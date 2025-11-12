@@ -7,6 +7,10 @@ import cors from "cors";
 import { customLoggerLevel } from "./utils/logging.ts";
 dotenv.config();
 
+/**
+ * Creates and configures the Express server.
+ * @returns The configured Express app.
+ */
 export function createServer() {
 	const app = express();
 	// Middleware

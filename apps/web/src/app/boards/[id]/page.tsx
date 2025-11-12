@@ -42,6 +42,10 @@ export default function EditBoard() {
 		loadBoard();
 	}, [boardId]);
 
+	/**
+	 * Handles the release of a dragged card, performing move or delete operations.
+	 * @param currentState - The current board state.
+	 */
 	const handleRelease = (currentState: BoardState) => {
 		const { mouseHoveringContainer, newIndex, originalCardPlace, dragging, mouseHoveringTrash } = currentState.userActions;
 
