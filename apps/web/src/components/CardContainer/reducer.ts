@@ -3,6 +3,7 @@ import type { Update } from "@/utils/types";
 
 export interface CardInfo {
 	title: string;
+	description: string;
 }
 
 export interface OriginalCardPlace {
@@ -107,9 +108,16 @@ export function boardReducer(state: BoardState, action: BoardAction) {
 			};
 		}
 		case "setBoard": {
+			// Ensure backward compatibility: add description to cards that don't have it
+			const cardsWithDescription = action.data.cards.map((card: CardInfo) => ({
+				...card,
+				description: card.description || "",
+			}));
 			return {
 				...state,
-				...action.data,
+				cards: cardsWithDescription,
+				containers: action.data.containers,
+				containersOrder: action.data.containersOrder,
 			};
 		}
 		case "updateContainerName": {

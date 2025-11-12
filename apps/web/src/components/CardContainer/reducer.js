@@ -1,0 +1,117 @@
+import { getApiLink } from "@/utils/apiHandler";
+/**
+ * Reducer in charge of mutating the board state.
+ * @param state - Current state provided by React useReducer
+ * @param action - Requested change to apply to the state
+ * @returns The new board state
+ *
+ * @remarks
+ * Supported actions and their arguments:
+ * - "addCard": Add a new card
+ *      - containerId: Destination container index
+ *      - cardInfo: Default card data
+ * - "updateCard": Edit a card field
+ *      - cardId: Card index
+ *      - param: Field to update
+ *      - value: New value for the field
+ * - "updateUserActions": Same shape as updateCard but applies to userActions (no cardId)
+ * - "updateContainerCards": Replace the cards array for a given container (newCards)
+ * - "setBoard": Replace cards, containers and containersOrder from persisted data
+ * - "updateContainerName": Rename a container
+ * - "createContainer": Create a new empty container and append it to containersOrder
+ * - "deleteContainer": Remove a container and update containersOrder accordingly
+ */
+export function boardReducer(state, action) {
+    switch (action.type) {
+        case "addCard": {
+            const newCardId = state.cards.length;
+            const newState = {
+                ...state,
+                cards: [...state.cards, action.cardInfo],
+                containers: state.containers.map((c, i) => (i === action.containerId ? { ...c, cards: [...c.cards, newCardId] } : c)),
+            };
+            saveBoardState(newState);
+            return newState;
+        }
+        case "updateCard": {
+            const newState = {
+                ...state,
+                cards: state.cards.map((c, i) => (i === action.cardId ? { ...state.cards[i], [action.param]: action.value } : c)),
+            };
+            saveBoardState(newState);
+            return newState;
+        }
+        case "updateContainerCards": {
+            const newState = {
+                ...state,
+                containers: state.containers.map((c, i) => (i === action.containerId ? { ...c, cards: action.newCards } : c)),
+            };
+            saveBoardState(newState);
+            return newState;
+        }
+        case "updateUserActions": {
+            return {
+                ...state,
+                userActions: {
+                    ...state.userActions,
+                    [action.param]: action.value,
+                },
+            };
+        }
+        case "setBoard": {
+            return {
+                ...state,
+                ...action.data,
+            };
+        }
+        case "updateContainerName": {
+            const newState = {
+                ...state,
+                containers: state.containers.map((c, i) => (i === action.containerId ? { ...c, title: action.newTitle } : c)),
+            };
+            saveBoardState(newState);
+            return newState;
+        }
+        case "createContainer": {
+            const newState = {
+                ...state,
+                containers: [...state.containers, { title: "New container", cards: [] }],
+                containersOrder: [...state.containersOrder, state.containersOrder.length],
+            };
+            saveBoardState(newState);
+            return newState;
+        }
+        case "deleteContainer": {
+            // Remove container and its card references; card data array is kept (server may prune later)
+            const newContainers = state.containers.toSpliced(action.containerId, 1);
+            // Remove from order and remap indices since container ids are array indices
+            const newOrder = state.containersOrder
+                .filter((cid) => cid !== action.containerId)
+                .map((cid) => (cid > action.containerId ? cid - 1 : cid));
+            const newState = {
+                ...state,
+                containers: newContainers,
+                containersOrder: newOrder,
+            };
+            saveBoardState(newState);
+            return newState;
+        }
+    }
+}
+async function saveBoardState(newState) {
+    // Do nothing when doing unit tests
+    if (typeof fetch === "undefined")
+        return;
+    await fetch(`${getApiLink()}/boards/updateBoard`, {
+        method: "PUT",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+            id: newState.boardId,
+            data: {
+                cards: newState.cards,
+                containers: newState.containers,
+                containersOrder: newState.containersOrder,
+            },
+        }),
+    });
+}

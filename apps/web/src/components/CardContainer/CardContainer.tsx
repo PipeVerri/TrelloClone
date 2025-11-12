@@ -75,7 +75,7 @@ export default function CardContainer({ id, state, dispatch }: CardContainerProp
 	}, [mouseHovering, state.userActions.dragging, state.containers, id, dispatch]);
 
 	function createCard() {
-		const defaultCard: CardInfo = { title: "" };
+		const defaultCard: CardInfo = { title: "", description: "" };
 		dispatch({ type: "addCard", containerId: id, cardInfo: defaultCard });
 	}
 

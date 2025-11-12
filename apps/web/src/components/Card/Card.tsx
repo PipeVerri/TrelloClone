@@ -1,8 +1,10 @@
 import { faBars, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type React from "react";
+import { useState } from "react";
 import type { Dispatch } from "react";
 import type { BoardAction, BoardState, OriginalCardPlace } from "../CardContainer/reducer";
+import CardEditModal from "../CardEditModal/CardEditModal";
 
 interface BaseCardProps {
 	id: number;
@@ -33,6 +35,7 @@ type CardProps = BaseCardProps &
  * @param innerRef - If provided, used as a ref to the card's div (for measurements)
  */
 export default function Card({ id, state, dispatch, dragging = false, originalPlace, innerRef = (_el) => {} }: CardProps) {
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const placeholder = "Titulo...";
 
 	const handlePress = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -50,7 +53,7 @@ export default function Card({ id, state, dispatch, dragging = false, originalPl
 	};
 
 	const data = state.cards[id];
-	return (
+	const cardElement = (
 		// biome-ignore lint/a11y/useSemanticElements: The card has button children and should be fully interactive
 		<div
 			className={
@@ -80,12 +83,32 @@ export default function Card({ id, state, dispatch, dragging = false, originalPl
 				className={"overflow-hidden text-ellipsis block w-full"}
 				size={Math.max(placeholder.length, data.title.length)}
 			/>
-			<button className={"bg-green-500 p-2 rounded-lg"} type={"button"}>
+			<button
+				className={"bg-green-500 p-2 rounded-lg"}
+				type={"button"}
+				onClick={() => setIsModalOpen(true)}
+				onMouseDown={(e) => {
+					e.stopPropagation();
+				}}
+			>
 				<FontAwesomeIcon icon={faPen} color="white" />
 			</button>
 			<button className={"bg-green-500 p-2 rounded-lg"} data-testid={"drag-button"} type={"button"}>
 				<FontAwesomeIcon icon={faBars} color="white" />
 			</button>
 		</div>
+	);
+
+	return (
+		<>
+			{cardElement}
+			<CardEditModal
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				state={state}
+				dispatch={dispatch}
+				cardId={id}
+			/>
+		</>
 	);
 }
