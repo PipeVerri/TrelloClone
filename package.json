@@ -14,7 +14,8 @@
     "test:unit": "turbo run test:unit",
     "test:e2e": "turbo run test:e2e",
     "container:up": "docker compose up -d",
-    "container:down": "docker compose down"
+    "container:down": "docker compose down",
+    "init:db": "turbo run container:up --filter=// && turbo run db:generate db:migrate --filter=@my/db"
   },
   "keywords": [],
   "author": "",

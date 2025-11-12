@@ -35,6 +35,14 @@
     "//#container:down": {
       "cache": false,
       "outputs": []
+    },
+    "db:generate": {
+      "cache": false,
+      "outputs": []
+    },
+    "db:migrate": {
+      "cache": false,
+      "outputs": []
     }
   }
 }
