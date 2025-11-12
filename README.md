@@ -1,5 +1,13 @@
 # programacion-3-2025-verri-PipeVerri
-## Proyecto: Aplicación de Tablero de Tareas (Estilo Trello)
+## Como correrlo
+1. Instalar `docker` y `docker-compose`. Se puede instalar desde pacman
+2. Ejecutar `npm i -g turbo pnpm`
+3. Ejecutar `pnpm install`en la base del monorepo
+4. Ejecutar `sudo usermod -aG docker $USER` para que turbo pueda acceder a docker
+5. Hacer un logout y volverse a logear para que se actualizen los permisos o correr `newgrp docker`
+6. En la carpeta base del proyecto, correr `turbo dev`
+
+## Requisitos del MVP
 
 El objetivo de este proyecto es construir una aplicación web full-stack inspirada en Trello. La aplicación permitirá a los usuarios gestionar tareas a través de un tablero interactivo con columnas y tarjetas.
 
