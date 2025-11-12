@@ -1,0 +1,1 @@
+{"root":["./jest.config.ts","./src/app.ts","./src/index.ts","./src/controllers/board.controller.ts","./src/middleware/errorHandler.ts","./src/middleware/validate.ts","./src/routes/board.route.ts","./src/services/board.service.ts","./src/utils/appError.ts","./src/utils/logging.ts","./tests/boards.e2e.spec.ts"],"version":"5.9.2"}

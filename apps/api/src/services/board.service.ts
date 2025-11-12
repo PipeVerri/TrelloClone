@@ -4,7 +4,7 @@ import { Prisma } from "@my/db";
 
 export async function createBoard(title: string) {
 	const defaultBoard: Prisma.JsonObject = {
-		cards: [{ title: "Test card" }],
+		cards: [{ title: "Test card", description: "" }],
 		containers: [{ title: "Test container", cards: [0] }],
 		containersOrder: [0],
 	};
