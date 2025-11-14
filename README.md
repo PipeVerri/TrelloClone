@@ -6,8 +6,9 @@
 4. Ejecutar `pnpm approve-builds` si lo pide
 5. Ejecutar `sudo usermod -aG docker $USER` para que turbo pueda acceder a docker
 6. Hacer un logout y volverse a logear para que se actualizen los permisos o correr `newgrp docker`
-7. Correr `pnpm init:db` en la carpeta base del proyecto
-8. En la carpeta base del proyecto, correr `turbo dev`
+7. Agregar en packages/db un archivo .env que contenga `DATABASE_URL="postgresql://postgres:postgres@localhost:5432/trello"`
+8. Correr `pnpm init:db` en la carpeta base del proyecto
+9. En la carpeta base del proyecto, correr `turbo dev`
 
 ## Requisitos del MVP
 
