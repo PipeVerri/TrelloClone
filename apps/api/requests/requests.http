@@ -28,7 +28,8 @@ Accept: application/json
   "data": {
     "cards": [
       {
-        "title": "testCard2"
+        "title": "testCard2",
+        "description": "Description for test card"
       }
     ],
     "containers": [

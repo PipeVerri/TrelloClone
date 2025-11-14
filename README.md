@@ -1,7 +1,7 @@
 # programacion-3-2025-verri-PipeVerri
 ## Como correrlo
 1. Instalar `docker` y `docker-compose`. Se puede instalar desde pacman
-2. Ejecutar `npm i -g turbo pnpm`
+2. Ejecutar `npm i -g turbo pnpm pino-pretty`
 3. Ejecutar `pnpm install`en la base del monorepo
 4. Ejecutar `pnpm approve-builds` si lo pide
 5. Ejecutar `sudo usermod -aG docker $USER` para que turbo pueda acceder a docker
